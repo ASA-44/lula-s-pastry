@@ -67,17 +67,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="section" id="contact">
-        <div className="section-header">
-          <h2>Contact</h2>
-        </div>
-        <p>
-          Follow Lula&apos;s Pastry on Instagram or order directly through the customer menu whenever
-          you are ready for something sweet.
-        </p>
-      </section>
-
-      <footer className="footer">Lula&apos;s Pastry - Next.js and TypeScript version</footer>
     </main>
   );
 }
