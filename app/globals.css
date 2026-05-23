@@ -521,6 +521,44 @@ button {
   text-underline-offset: 3px;
 }
 
+.password-checklist {
+  display: grid;
+  gap: 7px;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.password-checklist li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.password-checklist li.valid {
+  color: var(--success-text);
+}
+
+.password-check-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--success-text);
+  background: white;
+}
+
+.password-checklist li.valid .password-check-icon {
+  border-color: rgba(38, 100, 49, 0.35);
+  background: var(--success-bg);
+}
+
 .dashboard {
   padding: 38px 0 72px;
 }
