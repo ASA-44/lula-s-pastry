@@ -1,42 +1,38 @@
-import { redirect } from "next/navigation";
+import Link from "next/link";
 
-import { ProductCard } from "@/components/ProductCard";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getAvailableDishes } from "@/lib/data";
+import { getMenuPreviewItems, menuCategories } from "@/lib/menu";
 import { getSession } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProductsPage() {
   const session = await getSession();
-  if (!session || session.role !== "customer") {
-    redirect("/login");
-  }
-
   const dishes = await getAvailableDishes();
 
   return (
     <main className="page-shell">
       <SiteHeader session={session} />
 
-      <section className="section">
-        <div className="page-title">
-          <div>
-            <p className="eyebrow">Welcome, {session.name}</p>
-            <h1>Our Menu</h1>
-            <p>Choose your favorite pastries, cakes, pies, and muffins.</p>
-          </div>
+      <section className="menu-section">
+        <div className="menu-heading">
+          <h1>Our Menu</h1>
+          <p>Explore our delicious selection</p>
         </div>
 
-        {dishes.length === 0 ? (
-          <div className="empty-state">No available dishes yet.</div>
-        ) : (
-          <div className="grid">
-            {dishes.map((dish) => (
-              <ProductCard key={dish.id} dish={dish} canOrder />
-            ))}
-          </div>
-        )}
+        <div className="menu-category-grid">
+          {menuCategories.map((category) => (
+            <Link href={`/products/${category.slug}`} className="menu-category-card" key={category.slug}>
+              <h2>{category.title}</h2>
+              <ul>
+                {getMenuPreviewItems(dishes, category).map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </Link>
+          ))}
+        </div>
       </section>
     </main>
   );
