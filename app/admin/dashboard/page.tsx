@@ -122,23 +122,29 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
               {chefCreated && <div className="notice">Chef account created.</div>}
               <div className="form-row">
                 <label htmlFor="full_name">Full name</label>
-                <input id="full_name" name="full_name" required />
+                <input id="full_name" name="full_name" placeholder="Chef full name" required />
               </div>
               <div className="form-row">
                 <label htmlFor="username">Username</label>
-                <input id="username" name="username" required />
+                <input id="username" name="username" placeholder="chef_username" required />
               </div>
               <div className="form-row">
                 <label htmlFor="email">Email</label>
-                <input id="email" name="email" type="email" required />
+                <input id="email" name="email" type="email" placeholder="chef@lulaspastry.com" required />
               </div>
               <div className="form-row">
                 <label htmlFor="phone">Phone</label>
-                <input id="phone" name="phone" />
+                <input id="phone" name="phone" placeholder="+961..." />
               </div>
               <div className="form-row">
                 <label htmlFor="password">Temporary password</label>
-                <input id="password" name="password" type="password" required />
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="Set a temporary password"
+                  required
+                />
               </div>
               <button className="primary-button" type="submit">
                 Create Chef

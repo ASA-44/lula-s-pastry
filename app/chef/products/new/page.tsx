@@ -43,19 +43,34 @@ export default async function NewDishPage({ searchParams }: PageProps) {
           {error && <div className="error">{error}</div>}
           <div className="form-row">
             <label htmlFor="name">Name</label>
-            <input id="name" name="name" required />
+            <input id="name" name="name" placeholder="Chocolate Cake" required />
           </div>
           <div className="form-row">
             <label htmlFor="description">Description</label>
-            <textarea id="description" name="description" />
+            <textarea
+              id="description"
+              name="description"
+              placeholder="Describe the dish for customers"
+            />
           </div>
           <div className="form-row">
             <label htmlFor="price">Price</label>
-            <input id="price" name="price" type="number" min="0.01" step="0.01" required />
+            <input
+              id="price"
+              name="price"
+              type="number"
+              min="0.01"
+              step="0.01"
+              placeholder="80.00"
+              required
+            />
           </div>
           <div className="form-row">
             <label htmlFor="category">Category</label>
-            <select id="category" name="category" defaultValue="pastry">
+            <select id="category" name="category" defaultValue="" required>
+              <option value="" disabled>
+                Select category
+              </option>
               <option value="pastry">Pastry</option>
               <option value="cake">Cake</option>
               <option value="pie">Pie</option>
@@ -65,15 +80,21 @@ export default async function NewDishPage({ searchParams }: PageProps) {
           </div>
           <div className="form-row">
             <label htmlFor="ingredients">Ingredients</label>
-            <textarea id="ingredients" name="ingredients" />
+            <textarea id="ingredients" name="ingredients" placeholder="Flour, butter, chocolate, sugar" />
           </div>
           <div className="form-row">
             <label htmlFor="preparation_time">Preparation time in minutes</label>
-            <input id="preparation_time" name="preparation_time" type="number" min="0" />
+            <input
+              id="preparation_time"
+              name="preparation_time"
+              type="number"
+              min="0"
+              placeholder="120"
+            />
           </div>
           <div className="form-row">
             <label htmlFor="photo">Photo</label>
-            <input id="photo" name="photo" type="file" accept="image/*" />
+            <input id="photo" name="photo" type="file" accept="image/*" title="Choose a dish photo" />
           </div>
           <button className="primary-button" type="submit">
             Save Dish

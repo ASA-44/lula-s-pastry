@@ -55,6 +55,7 @@ export default async function CartPage() {
                           name="quantity"
                           min="0"
                           defaultValue={item.quantity}
+                          placeholder="1"
                           aria-label={`Quantity for ${item.name}`}
                         />
                         <button className="ghost-button small" type="submit">

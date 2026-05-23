@@ -29,6 +29,7 @@ export function ProductCard({ dish, canOrder = false }: ProductCardProps) {
                 name="quantity"
                 min="1"
                 defaultValue="1"
+                placeholder="1"
                 className="quantity-input"
                 aria-label={`Quantity for ${dish.name}`}
               />

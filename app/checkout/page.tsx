@@ -49,15 +49,21 @@ export default async function CheckoutPage({ searchParams }: PageProps) {
             {error && <div className="error">{error}</div>}
             <div className="form-row">
               <label htmlFor="delivery_date">Delivery date</label>
-              <input id="delivery_date" name="delivery_date" type="date" required />
+              <input
+                id="delivery_date"
+                name="delivery_date"
+                type="date"
+                placeholder="Choose a delivery date"
+                required
+              />
             </div>
             <div className="form-row">
               <label htmlFor="address">Delivery address</label>
-              <input id="address" name="address" required />
+              <input id="address" name="address" placeholder="Enter your full delivery address" required />
             </div>
             <div className="form-row">
               <label htmlFor="phone">Phone number</label>
-              <input id="phone" name="phone" placeholder="+961..." required />
+              <input id="phone" name="phone" placeholder="+961 76 123 404" required />
             </div>
             <div className="form-row">
               <label htmlFor="payment_method">Payment method</label>
@@ -69,7 +75,7 @@ export default async function CheckoutPage({ searchParams }: PageProps) {
             </div>
             <div className="form-row">
               <label htmlFor="instructions">Special instructions</label>
-              <textarea id="instructions" name="instructions" />
+              <textarea id="instructions" name="instructions" placeholder="Add notes such as extra nuts or delivery timing" />
             </div>
             <button className="primary-button" type="submit">
               Place Order

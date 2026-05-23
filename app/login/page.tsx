@@ -56,11 +56,22 @@ export default async function LoginPage({ searchParams }: PageProps) {
             {created && <div className="notice">Account created. You can log in now.</div>}
             <div className="form-row">
               <label htmlFor="email_or_username">Email or username</label>
-              <input id="email_or_username" name="email_or_username" required />
+              <input
+                id="email_or_username"
+                name="email_or_username"
+                placeholder="Enter your email or username"
+                required
+              />
             </div>
             <div className="form-row">
               <label htmlFor="password">Password</label>
-              <input id="password" name="password" type="password" required />
+              <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Enter your password"
+                required
+              />
             </div>
             <button className="primary-button" type="submit">
               Login
@@ -71,19 +82,37 @@ export default async function LoginPage({ searchParams }: PageProps) {
             <h2>New Customer</h2>
             <div className="form-row">
               <label htmlFor="username">Username</label>
-              <input id="username" name="username" required />
+              <input id="username" name="username" placeholder="Choose a username" required />
             </div>
             <div className="form-row">
               <label htmlFor="email">Email</label>
-              <input id="email" name="email" type="email" required />
+              <input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="customer@example.com"
+                required
+              />
             </div>
             <div className="form-row">
               <label htmlFor="register_password">Password</label>
-              <input id="register_password" name="password" type="password" required />
+              <input
+                id="register_password"
+                name="password"
+                type="password"
+                placeholder="Create a password"
+                required
+              />
             </div>
             <div className="form-row">
               <label htmlFor="confirmPassword">Confirm password</label>
-              <input id="confirmPassword" name="confirmPassword" type="password" required />
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                placeholder="Repeat your password"
+                required
+              />
             </div>
             <button className="primary-button" type="submit">
               Create Customer Account
