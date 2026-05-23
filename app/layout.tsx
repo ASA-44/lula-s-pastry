@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${montserrat.variable} ${playfair.variable}`}>
-      <body>
+      <body className="min-h-screen bg-[var(--page)] text-[var(--text)] antialiased">
         {children}
         <SiteFooter />
       </body>
