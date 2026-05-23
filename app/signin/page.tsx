@@ -80,6 +80,9 @@ export default async function SignInPage({ searchParams }: PageProps) {
           <button className="primary-button" type="submit">
             Create Account
           </button>
+          <p className="auth-switch">
+            If you already have an account, <Link href="/login">login</Link>.
+          </p>
         </form>
       </section>
     </main>

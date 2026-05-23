@@ -74,6 +74,9 @@ export default async function LoginPage({ searchParams }: PageProps) {
           <button className="primary-button" type="submit">
             Login
           </button>
+          <p className="auth-switch">
+            If you don&apos;t have an account, please <Link href="/signin">signin</Link>.
+          </p>
         </form>
       </section>
     </main>

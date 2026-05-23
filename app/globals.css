@@ -420,6 +420,19 @@ button {
   color: var(--danger-text);
 }
 
+.auth-switch {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 700;
+  text-align: center;
+}
+
+.auth-switch a {
+  color: var(--primary-dark);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .dashboard {
   padding: 38px 0 72px;
 }
