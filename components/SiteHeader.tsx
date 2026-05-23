@@ -58,9 +58,14 @@ export function SiteHeader({ session }: SiteHeaderProps) {
             </button>
           </form>
         ) : (
-          <Link href="/login" className="primary-button small">
-            Login
-          </Link>
+          <>
+            <Link href="/login" className="ghost-button">
+              Login
+            </Link>
+            <Link href="/signin" className="primary-button small">
+              Sign In
+            </Link>
+          </>
         )}
       </div>
     </header>

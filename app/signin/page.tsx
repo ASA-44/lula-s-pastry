@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
-import { loginAction } from "@/app/actions";
+import { registerCustomerAction } from "@/app/actions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getSession } from "@/lib/session";
 
@@ -21,7 +21,7 @@ function redirectForRole(role: string) {
   return "/products";
 }
 
-export default async function LoginPage({ searchParams }: PageProps) {
+export default async function SignInPage({ searchParams }: PageProps) {
   const session = await getSession();
   if (session) {
     redirect(redirectForRole(session.role));
@@ -29,7 +29,6 @@ export default async function LoginPage({ searchParams }: PageProps) {
 
   const params = (await searchParams) ?? {};
   const error = pick(params.error);
-  const created = pick(params.created);
 
   return (
     <main className="page-shell">
@@ -37,27 +36,31 @@ export default async function LoginPage({ searchParams }: PageProps) {
 
       <section className="auth-wrap">
         <div className="auth-copy">
-          <p className="eyebrow">One secure login</p>
-          <h1>Welcome back to Lula&apos;s Pastry.</h1>
+          <p className="eyebrow">Customer sign in</p>
+          <h1>Create your Lula&apos;s Pastry account.</h1>
           <p>
-            Customers, chefs, and the protected Lula admin all login here. The dashboard opens
-            automatically based on your account role.
+            Enter your first name and email, then create a strong password with at least 8
+            characters, one capital letter, and one special character.
           </p>
-          <Link href="/signin" className="ghost-button">
-            Create customer account
+          <Link href="/login" className="ghost-button">
+            Already have an account?
           </Link>
         </div>
 
-        <form action={loginAction} className="auth-card form-stack">
-          <h2>Login</h2>
+        <form action={registerCustomerAction} className="auth-card form-stack">
+          <h2>Sign In</h2>
           {error && <div className="error">{error}</div>}
-          {created && <div className="notice">Account created. You can log in now.</div>}
           <div className="form-row">
-            <label htmlFor="email_or_username">Email or username</label>
+            <label htmlFor="first_name">First name</label>
+            <input id="first_name" name="first_name" placeholder="Enter your first name" required />
+          </div>
+          <div className="form-row">
+            <label htmlFor="email">Email</label>
             <input
-              id="email_or_username"
-              name="email_or_username"
-              placeholder="Enter your email or username"
+              id="email"
+              name="email"
+              type="email"
+              placeholder="customer@example.com"
               required
             />
           </div>
@@ -67,12 +70,15 @@ export default async function LoginPage({ searchParams }: PageProps) {
               id="password"
               name="password"
               type="password"
-              placeholder="Enter your password"
+              minLength={8}
+              pattern="(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}"
+              title="At least 8 characters, one capital letter, and one special character"
+              placeholder="Create a strong password"
               required
             />
           </div>
           <button className="primary-button" type="submit">
-            Login
+            Create Account
           </button>
         </form>
       </section>

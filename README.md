@@ -29,4 +29,5 @@ Customer: test@example.com / test123
 Chef: ahmed@lulas.com / 12345
 ```
 
-All roles use the same login page at `/login`. Only the admin account can add new chef accounts.
+All existing users use the same login page at `/login`. New customers create an account at `/signin`.
+Only the admin account can add new chef accounts.

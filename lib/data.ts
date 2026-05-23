@@ -71,6 +71,24 @@ export async function userExists(username: string, email: string) {
   return rows.length > 0;
 }
 
+export async function emailExists(email: string) {
+  const [rows] = await pool.query<Row<{ id: number }>[]>(
+    "SELECT id FROM users WHERE email = :email LIMIT 1",
+    { email }
+  );
+
+  return rows.length > 0;
+}
+
+export async function usernameExists(username: string) {
+  const [rows] = await pool.query<Row<{ id: number }>[]>(
+    "SELECT id FROM users WHERE username = :username LIMIT 1",
+    { username }
+  );
+
+  return rows.length > 0;
+}
+
 export async function getAvailableDishes() {
   const [rows] = await pool.query<Row<Dish>[]>(
     `SELECT id, name, description, price, category, image_url, available, ingredients, preparation_time, created_at, chef_id

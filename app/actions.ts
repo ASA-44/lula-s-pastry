@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
 
 import { pool } from "@/lib/db";
-import { findUserForLogin, getCartItems, userExists } from "@/lib/data";
+import { emailExists, findUserForLogin, getCartItems, userExists, usernameExists } from "@/lib/data";
 import { hashPassword, verifyPassword } from "@/lib/passwords";
 import { clearSession, getSession, setSession } from "@/lib/session";
 import type { OrderStatus, UserRole } from "@/types/database";
@@ -26,6 +26,28 @@ function redirectForRole(role: UserRole) {
   if (role === "admin") return "/admin/dashboard";
   if (role === "chef") return "/chef/dashboard";
   return "/products";
+}
+
+function passwordMeetsRules(password: string) {
+  return password.length >= 8 && /[A-Z]/.test(password) && /[^A-Za-z0-9]/.test(password);
+}
+
+function makeUsernameSeed(firstName: string, email: string) {
+  const seed = firstName || email.split("@")[0] || "customer";
+  return seed.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "") || "customer";
+}
+
+async function makeUniqueUsername(firstName: string, email: string) {
+  const base = makeUsernameSeed(firstName, email).slice(0, 40);
+  let username = base;
+  let suffix = 1;
+
+  while (await usernameExists(username)) {
+    username = `${base}_${suffix}`;
+    suffix += 1;
+  }
+
+  return username;
 }
 
 async function requireRoles(roles: UserRole[]) {
@@ -67,29 +89,29 @@ export async function loginAction(formData: FormData) {
 }
 
 export async function registerCustomerAction(formData: FormData) {
-  const username = formText(formData, "username");
+  const firstName = formText(formData, "first_name");
   const email = formText(formData, "email");
   const password = formText(formData, "password");
-  const confirmPassword = formText(formData, "confirmPassword");
 
-  if (!username || !email || !password || !confirmPassword) {
-    fail("/login", "Please fill all registration fields.");
+  if (!firstName || !email || !password) {
+    fail("/signin", "Please enter your first name, email, and password.");
   }
 
-  if (password !== confirmPassword) {
-    fail("/login", "Passwords do not match.");
+  if (await emailExists(email)) {
+    fail("/signin", "This email already exists. Please login instead.");
   }
 
-  if (await userExists(username, email)) {
-    fail("/login", "Username or email already exists.");
+  if (!passwordMeetsRules(password)) {
+    fail("/signin", "Password must be at least 8 characters with one capital letter and one special character.");
   }
 
+  const username = await makeUniqueUsername(firstName, email);
   const hashedPassword = await hashPassword(password);
 
   await pool.execute<ResultSetHeader>(
     `INSERT INTO users (username, email, password, user_type, full_name)
      VALUES (:username, :email, :password, 'customer', :fullName)`,
-    { username, email, password: hashedPassword, fullName: username }
+    { username, email, password: hashedPassword, fullName: firstName }
   );
 
   redirect("/login?created=1");

@@ -30,6 +30,9 @@ export default async function HomePage() {
             <Link href="/login" className="ghost-button">
               Login
             </Link>
+            <Link href="/signin" className="ghost-button">
+              Sign In
+            </Link>
           </div>
         </div>
 
