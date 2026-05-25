@@ -1,76 +1,86 @@
 import Link from "next/link";
 import {
   Bell,
-  ChefHat,
   CircleUserRound,
-  Cookie,
-  Gauge,
+  Cog,
+  Croissant,
+  LayoutDashboard,
   LogOut,
   PanelLeft,
+  Plus,
   Search,
-  Settings,
   ShoppingBag,
-  Users
+  UsersRound,
+  UtensilsCrossed
 } from "lucide-react";
 
 import { logoutAction } from "@/app/actions";
 import { Button } from "@/components/Button";
 import type { SessionUser } from "@/lib/session";
 
-export type AdminNavItem = "dashboard" | "orders" | "products" | "chefs" | "settings";
+export type AdminNavItem = "dashboard" | "orders" | "products" | "chefs" | "customers" | "settings";
 
 type AdminNavigationProps = {
   active: AdminNavItem;
   notificationCount?: number;
   searchPlaceholder?: string;
-  session: SessionUser;
+  session?: SessionUser;
 };
 
 function activeClass(active: AdminNavItem, item: AdminNavItem) {
   return active === item ? "active" : undefined;
 }
 
-export function AdminSidebar({ active, session }: Pick<AdminNavigationProps, "active" | "session">) {
+export function AdminSidebar({ active }: Pick<AdminNavigationProps, "active">) {
   return (
     <aside className="admin-sidebar" aria-label="Admin navigation">
-      <div className="admin-sidebar-brand">
+      <Link href="/admin/dashboard" className="admin-sidebar-brand" aria-label="Lula's Pastry admin dashboard">
         <img src="/asssets/logo.png" alt="Lula's Pastry logo" />
-        <div>
-          <h1>Lula&apos;s Pastry</h1>
-          <p>Admin Management</p>
-        </div>
-      </div>
+        <span>
+          <strong>Lula&apos;s Pastry</strong>
+          <small>Admin Management</small>
+        </span>
+      </Link>
 
       <nav className="admin-sidebar-nav">
         <Link href="/admin/dashboard" className={activeClass(active, "dashboard")}>
-          <Gauge size={20} />
+          <LayoutDashboard size={23} />
           Dashboard
         </Link>
         <Link href="/admin/orders" className={activeClass(active, "orders")}>
-          <ShoppingBag size={20} />
+          <ShoppingBag size={23} />
           Orders
         </Link>
         <Link href="/admin/products" className={activeClass(active, "products")}>
-          <Cookie size={20} />
+          <Croissant size={23} />
           Products
         </Link>
         <Link href="/admin/chefs" className={activeClass(active, "chefs")}>
-          <Users size={20} />
+          <UtensilsCrossed size={23} />
           Chefs
         </Link>
+        <Link href="/admin/customers" className={activeClass(active, "customers")}>
+          <UsersRound size={23} />
+          Customers
+        </Link>
         <Link href="/admin/settings" className={activeClass(active, "settings")}>
-          <Settings size={20} />
+          <Cog size={23} />
           Settings
         </Link>
       </nav>
 
-      <div className="admin-profile">
-        <div className="admin-profile-avatar">
-          <ChefHat size={22} />
-        </div>
-        <div>
-          <strong>{session.name}</strong>
-          <span>{session.role === "admin" ? "Protected Admin" : "Pastry Chef"}</span>
+      <div className="admin-sidebar-bottom">
+        <Button href="/admin/orders" className="admin-create-order-button">
+          <Plus size={10} />
+          Create New Order
+        </Button>
+
+        <div className="admin-profile">
+          <img src="/asssets/logo.png" alt="Chef Lula" />
+          <span>
+            <strong>Chef Lula</strong>
+            <small>Master Patissier</small>
+          </span>
         </div>
       </div>
     </aside>
@@ -79,8 +89,9 @@ export function AdminSidebar({ active, session }: Pick<AdminNavigationProps, "ac
 
 export function AdminTopbar({
   notificationCount = 0,
-  searchPlaceholder = "Search orders, products..."
-}: Omit<AdminNavigationProps, "active" | "session">) {
+  searchPlaceholder = "Search orders, products...",
+  session
+}: Omit<AdminNavigationProps, "active">) {
   return (
     <header className="admin-topbar">
       <div className="admin-mobile-brand">
@@ -101,8 +112,8 @@ export function AdminTopbar({
           {notificationCount > 0 && <span aria-label={`${notificationCount} pending notifications`} />}
         </Button>
         <div className="admin-divider" />
-        <Link href="/" className="admin-account-link">
-          <span>Lula&apos;s Pastry</span>
+        <Link href="/" className="admin-account-link" title={session?.name ?? "Lula's Pastry"}>
+          <span>{session?.name ?? "Lula's Pastry"}</span>
           <CircleUserRound size={22} />
         </Link>
         <form action={logoutAction}>
@@ -118,8 +129,8 @@ export function AdminTopbar({
 export function AdminNavigation({ active, notificationCount, searchPlaceholder, session }: AdminNavigationProps) {
   return (
     <>
-      <AdminSidebar active={active} session={session} />
-      <AdminTopbar notificationCount={notificationCount} searchPlaceholder={searchPlaceholder} />
+      <AdminSidebar active={active} />
+      <AdminTopbar notificationCount={notificationCount} searchPlaceholder={searchPlaceholder} session={session} />
     </>
   );
 }

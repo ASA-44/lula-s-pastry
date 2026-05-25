@@ -1,4 +1,4 @@
-import { AdminNavigation, type AdminNavItem } from "@/components/AdminNavigation";
+import { AdminNavigation, type AdminNavItem } from "@/components/admin/AdminNavigation";
 import type { SessionUser } from "@/lib/session";
 
 type AdminShellProps = {
