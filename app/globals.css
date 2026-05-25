@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+@theme inline {
+  --color-background: var(--page);
+  --color-card: var(--page);
+  --color-foreground: var(--text);
+  --color-muted-foreground: var(--muted);
+  --color-input-background: #ffffff;
+  --color-border: var(--line);
+  --color-primary: var(--primary);
+  --color-primary-foreground: #ffffff;
+  --color-accent: var(--primary-dark);
+}
+
 :root {
   --page: #fffdfb;
   --soft: #f8e6de;

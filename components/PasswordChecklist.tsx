@@ -1,101 +1,116 @@
 "use client";
 
 import { useState } from "react";
-
-import { checkPasswordRules } from "@/lib/password-rules";
+import { AlertCircle, CheckCircle } from "lucide-react";
 
 type PasswordChecklistProps = {
   mode?: "signin" | "login";
   placeholder?: string;
 };
 
-const ruleDisplayText = {
-  minLength: "At least 8 characters",
-  capital: "One capital letter",
-  special: "One special character (!@#$%^&*)"
-};
+const specialCharacterPattern = /[!@#$%^&*(),.?":{}|<>]/;
 
-const ruleErrorText = {
-  minLength: "at least 8 characters",
-  capital: "at least one capital letter",
-  special: "at least one special character"
-};
+function validatePassword(pwd: string) {
+  const hasCapital = /[A-Z]/.test(pwd);
+  const hasSpecial = specialCharacterPattern.test(pwd);
+  const hasMinLength = pwd.length >= 8;
+
+  if (!hasMinLength) {
+    return "Password must be at least 8 characters long";
+  }
+  if (!hasCapital) {
+    return "Password must contain at least one capital letter";
+  }
+  if (!hasSpecial) {
+    return "Password must contain at least one special character";
+  }
+  return "";
+}
 
 export function PasswordChecklist({
   mode = "signin",
-  placeholder = mode === "login" ? "Enter your password" : "Create a strong password"
+  placeholder = "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
 }: PasswordChecklistProps) {
   const [password, setPassword] = useState("");
-  const ruleStates = checkPasswordRules(password);
-  const missingRule = password.length > 0 ? ruleStates.find((rule) => !rule.valid) : undefined;
-  const hasError = Boolean(missingRule);
+  const [passwordError, setPasswordError] = useState("");
   const enforcesRules = mode === "signin";
+  const hasMinLength = password.length >= 8;
+  const hasCapital = /[A-Z]/.test(password);
+  const hasSpecial = specialCharacterPattern.test(password);
+
+  function handlePasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const pwd = e.target.value;
+    setPassword(pwd);
+    setPasswordError(validatePassword(pwd));
+  }
 
   return (
-    <div className="form-row">
-      <label htmlFor="password">Password</label>
-
+    <div className="space-y-2">
+      <label className="text-foreground" htmlFor="password">
+        Password
+      </label>
       <input
         id="password"
-        name="password"
         type="password"
+        name="password"
         value={password}
         minLength={enforcesRules ? 8 : undefined}
-        pattern={enforcesRules ? "(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}" : undefined}
+        pattern={enforcesRules ? '(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}' : undefined}
         title="At least 8 characters, one capital letter, and one special character"
-        placeholder={placeholder}
-        className={`!min-h-[68px] !rounded-[18px] !px-6 !text-[1.25rem] !outline-none transition-colors ${
-          hasError
-            ? "!border-2 !border-red-500 focus:!border-red-500"
-            : "!border !border-[var(--line)] focus:!border-[var(--primary)]"
+        onChange={handlePasswordChange}
+        className={`w-full px-4 py-2 bg-input-background border rounded-lg focus:outline-none focus:ring-2 ${
+          passwordError
+            ? "border-red-500 focus:ring-red-500"
+            : password
+              ? "border-green-500 focus:ring-primary"
+              : "border-border focus:ring-primary"
         }`}
-        aria-invalid={hasError}
-        aria-describedby={`${hasError ? "password-error " : ""}password-requirements`}
-        onInput={(event) => setPassword(event.currentTarget.value)}
-        onChange={(event) => setPassword(event.currentTarget.value)}
+        placeholder={placeholder}
+        aria-invalid={Boolean(passwordError)}
+        aria-describedby={`${passwordError ? "password-error " : ""}password-requirements`}
         required
       />
-
-      {hasError && missingRule && (
-        <p
-          id="password-error"
-          className="mt-3 flex items-center gap-3 text-base font-medium text-red-600"
-        >
-          <span
-            className="inline-flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 border-red-600 text-sm font-bold leading-none"
-            aria-hidden="true"
-          >
-            !
-          </span>
-          Password must contain {ruleErrorText[missingRule.id]}
-        </p>
+      {passwordError && (
+        <div id="password-error" className="flex items-start gap-2 text-red-600 text-sm">
+          <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+          <span>{passwordError}</span>
+        </div>
       )}
-
-      <p className="mt-6 text-lg font-medium text-[var(--muted)]">Password must contain:</p>
-
-      <ul id="password-requirements" className="mt-3 grid gap-3 text-lg" aria-live="polite">
-        {ruleStates.map((rule) => (
-          <li
-            key={rule.id}
-            className={`flex items-center gap-3 ${
-              rule.valid ? "text-green-600" : "text-[var(--muted)]"
-            }`}
-          >
-            <span
-              className={`inline-flex h-6 w-6 flex-none items-center justify-center rounded-full border-2 text-sm font-black leading-none transition-colors ${
-                rule.valid
-                  ? "border-green-600 text-green-600"
-                  : "border-[var(--muted)] text-transparent"
-              }`}
-              aria-hidden="true"
-            >
-              {rule.valid ? "\u2713" : ""}
+      <div className="space-y-2 pt-2">
+        <p className="text-sm text-muted-foreground">Password must contain:</p>
+        <div id="password-requirements" className="space-y-1" aria-live="polite">
+          <div className="flex items-center gap-2 text-sm">
+            {hasMinLength ? (
+              <CheckCircle className="h-4 w-4 text-green-600" />
+            ) : (
+              <div className="h-4 w-4 rounded-full border-2 border-muted-foreground" />
+            )}
+            <span className={hasMinLength ? "text-green-600" : "text-muted-foreground"}>
+              At least 8 characters
             </span>
-
-            <span>{ruleDisplayText[rule.id]}</span>
-          </li>
-        ))}
-      </ul>
+          </div>
+          <div className="flex items-center gap-2 text-sm">
+            {hasCapital ? (
+              <CheckCircle className="h-4 w-4 text-green-600" />
+            ) : (
+              <div className="h-4 w-4 rounded-full border-2 border-muted-foreground" />
+            )}
+            <span className={hasCapital ? "text-green-600" : "text-muted-foreground"}>
+              One capital letter
+            </span>
+          </div>
+          <div className="flex items-center gap-2 text-sm">
+            {hasSpecial ? (
+              <CheckCircle className="h-4 w-4 text-green-600" />
+            ) : (
+              <div className="h-4 w-4 rounded-full border-2 border-muted-foreground" />
+            )}
+            <span className={hasSpecial ? "text-green-600" : "text-muted-foreground"}>
+              One special character (!@#$%^&*)
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
