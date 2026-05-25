@@ -203,6 +203,28 @@ export async function getOrders() {
   return rows.map(normalizeOrder);
 }
 
+export async function getTopSellingDish() {
+  const [rows] = await pool.query<Row<{ name: string; units_sold: number | string }>[]>(
+    `SELECT d.name, SUM(oi.quantity) AS units_sold
+     FROM order_items oi
+     JOIN dishes d ON oi.dish_id = d.id
+     GROUP BY d.id, d.name
+     ORDER BY units_sold DESC, d.name ASC
+     LIMIT 1`
+  );
+
+  const topDish = rows[0];
+
+  if (!topDish) {
+    return null;
+  }
+
+  return {
+    name: topDish.name,
+    unitsSold: Number(topDish.units_sold)
+  };
+}
+
 export async function getOrderDetails(orderId: number) {
   const [orders] = await pool.query<Row<Order>[]>(
     `SELECT o.*, u.full_name
