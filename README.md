@@ -53,7 +53,7 @@ POST /api/password-check
 Test accounts:
 
 ```text
-Admin: lula@lulaspastry.com / lula12345
+Admin: lula@lulaspastry.com / Lula@12345
 Customer: test@example.com / test123
 Chef: ahmed@lulas.com / 12345
 ```
