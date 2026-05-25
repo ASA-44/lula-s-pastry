@@ -59,6 +59,7 @@ export default async function LoginPage({ searchParams }: PageProps) {
               id="email_or_username"
               name="email_or_username"
               placeholder="Enter your email or username"
+              suppressHydrationWarning
               required
             />
           </div>
@@ -66,11 +67,12 @@ export default async function LoginPage({ searchParams }: PageProps) {
           <button
             className="primary-button !mt-4 !min-h-[72px] !rounded-[14px] !text-2xl"
             type="submit"
+            suppressHydrationWarning
           >
             Login
           </button>
           <p className="auth-switch">
-            If you don&apos;t have an account, please <Link href="/signin">signin</Link>.
+            If you don&apos;t have an account, please <Link href="/signin">SignUp</Link>.
           </p>
         </form>
       </section>

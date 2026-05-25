@@ -44,7 +44,7 @@ export default async function ProductCategoryPage({ params }: PageProps) {
         {!canOrder && (
           <div className="notice menu-notice">
             <Link href="/login">Login</Link> as a customer to add items to your cart, or{" "}
-            <Link href="/signin">sign in</Link> to create a customer account.
+            <Link href="/signin">sign up</Link> to create a customer account.
           </div>
         )}
 

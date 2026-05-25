@@ -7,6 +7,69 @@ import type { CartItem, Dish, Order, OrderItem, User } from "@/types/database";
 
 type Row<T> = T & RowDataPacket;
 
+const fallbackDishes: Dish[] = [
+  {
+    id: 1,
+    name: "Chocolate Cake",
+    description: "Rich chocolate sponge layered with smooth cocoa frosting.",
+    price: 24,
+    category: "cake",
+    image_url: "/asssets/products/chocolate_cake.jpeg",
+    available: 1,
+    ingredients: "Chocolate, flour, eggs, butter, sugar",
+    preparation_time: 45,
+    chef_id: null
+  },
+  {
+    id: 2,
+    name: "Apple Pie",
+    description: "Golden pastry filled with cinnamon apples.",
+    price: 18,
+    category: "pie",
+    image_url: "/asssets/products/apple_pie.jpeg",
+    available: 1,
+    ingredients: "Apples, cinnamon, butter, flour, sugar",
+    preparation_time: 40,
+    chef_id: null
+  },
+  {
+    id: 3,
+    name: "Butter Croissant",
+    description: "Flaky laminated pastry baked until crisp and tender.",
+    price: 4.5,
+    category: "pastry",
+    image_url: "/asssets/products/croissant.jpeg",
+    available: 1,
+    ingredients: "Flour, butter, yeast, milk",
+    preparation_time: 25,
+    chef_id: null
+  },
+  {
+    id: 4,
+    name: "Apple Danish",
+    description: "Buttery pastry with sweet apple filling.",
+    price: 5,
+    category: "pastry",
+    image_url: "/asssets/products/danish.jpeg",
+    available: 1,
+    ingredients: "Flour, butter, apples, sugar",
+    preparation_time: 30,
+    chef_id: null
+  },
+  {
+    id: 5,
+    name: "Blueberry Muffin",
+    description: "Soft muffin packed with blueberries.",
+    price: 3.75,
+    category: "muffin",
+    image_url: "/asssets/products/muffin.jpeg",
+    available: 1,
+    ingredients: "Blueberries, flour, eggs, butter",
+    preparation_time: 20,
+    chef_id: null
+  }
+];
+
 function normalizeDish(row: Row<Dish>): Dish {
   return {
     ...row,
@@ -90,14 +153,20 @@ export async function usernameExists(username: string) {
 }
 
 export async function getAvailableDishes() {
-  const [rows] = await pool.query<Row<Dish>[]>(
-    `SELECT id, name, description, price, category, image_url, available, ingredients, preparation_time, created_at, chef_id
-     FROM dishes
-     WHERE available = 1
-     ORDER BY id ASC`
-  );
+  try {
+    const [rows] = await pool.query<Row<Dish>[]>(
+      `SELECT id, name, description, price, category, image_url, available, ingredients, preparation_time, created_at, chef_id
+       FROM dishes
+       WHERE available = 1
+       ORDER BY id ASC`
+    );
 
-  return rows.map(normalizeDish);
+    return rows.map(normalizeDish);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "unknown error";
+    console.warn(`Using bundled menu data because the MySQL menu query failed: ${message}`);
+    return fallbackDishes;
+  }
 }
 
 export async function getAllDishes() {

@@ -69,7 +69,22 @@ export async function loginAction(formData: FormData) {
     fail("/login", "Please enter your username or email and password.");
   }
 
-  const user = await findUserForLogin(value);
+  let user;
+
+  try {
+    user = await findUserForLogin(value);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+
+    if (message.includes("Unknown database")) {
+      fail(
+        "/login",
+        "The MySQL database is not ready. Please import database/lulas_pastry.sql as lulas_pastry, then try again."
+      );
+    }
+
+    throw error;
+  }
 
   if (!user || !(await verifyPassword(password, user.password))) {
     fail("/login", "Invalid login details.");
@@ -82,7 +97,7 @@ export async function loginAction(formData: FormData) {
     role: user.user_type
   });
 
-  redirect(redirectForRole(user.user_type));
+  redirect(user.user_type === "admin" ? "/admin/dashboard?secret=1" : redirectForRole(user.user_type));
 }
 
 export async function registerCustomerAction(formData: FormData) {
