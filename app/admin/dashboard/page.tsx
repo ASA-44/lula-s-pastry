@@ -1,34 +1,26 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
   BadgeCheck,
-  Bell,
   ChefHat,
   ChevronLeft,
   ChevronRight,
-  CircleUserRound,
   ClipboardList,
   Cookie,
   CreditCard,
-  Gauge,
-  LogOut,
   MoreVertical,
   Package,
-  PanelLeft,
   Printer,
   ReceiptText,
-  Search,
-  Settings,
-  ShoppingBag,
   Star,
   Store,
   TrendingUp,
-  Users,
   X
 } from "lucide-react";
 
-import { createChefAction, logoutAction, updateOrderStatusAction } from "@/app/actions";
+import { createChefAction, updateOrderStatusAction } from "@/app/actions";
 import { AdminSecretMessage } from "@/components/AdminSecretMessage";
+import { AdminNavigation } from "@/components/AdminNavigation";
+import { Button } from "@/components/Button";
 import { getChefs, getOrders, getTopSellingDish } from "@/lib/data";
 import { money, niceDate } from "@/lib/format";
 import { getSession } from "@/lib/session";
@@ -99,80 +91,13 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
     <main className="admin-dashboard-shell">
       <AdminSecretMessage show={showSecret} />
 
-      <aside className="admin-sidebar" aria-label="Admin navigation">
-        <div className="admin-sidebar-brand">
-          <img src="/asssets/logo.png" alt="Lula's Pastry logo" />
-          <div>
-            <h1>Lula&apos;s Admin</h1>
-            <p>Management Portal</p>
-          </div>
-        </div>
-
-        <nav className="admin-sidebar-nav">
-          <Link href="/admin/dashboard" className="active">
-            <Gauge size={20} />
-            Dashboard
-          </Link>
-          <a href="#orders">
-            <ShoppingBag size={20} />
-            Orders
-          </a>
-          <Link href="/chef/products">
-            <Cookie size={20} />
-            Products
-          </Link>
-          <a href="#chefs">
-            <Users size={20} />
-            Chefs
-          </a>
-          <a href="#settings">
-            <Settings size={20} />
-            Settings
-          </a>
-        </nav>
-
-        <div className="admin-profile">
-          <div className="admin-profile-avatar">
-            <ChefHat size={22} />
-          </div>
-          <div>
-            <strong>{session.name}</strong>
-            <span>Protected Admin</span>
-          </div>
-        </div>
-      </aside>
-
       <section className="admin-main">
-        <header className="admin-topbar">
-          <div className="admin-mobile-brand">
-            <button type="button" aria-label="Open admin menu">
-              <PanelLeft size={22} />
-            </button>
-            <span>Lula&apos;s Admin</span>
-          </div>
-
-          <label className="admin-search">
-            <Search size={18} />
-            <input type="search" placeholder="Search orders, products..." />
-          </label>
-
-          <div className="admin-topbar-actions">
-            <button type="button" className="admin-icon-button" aria-label="Notifications">
-              <Bell size={20} />
-              {pendingOrders > 0 && <span aria-label={`${pendingOrders} pending orders`} />}
-            </button>
-            <div className="admin-divider" />
-            <Link href="/" className="admin-account-link">
-              <span>Lula&apos;s Pastry</span>
-              <CircleUserRound size={22} />
-            </Link>
-            <form action={logoutAction}>
-              <button type="submit" className="admin-icon-button" aria-label="Logout">
-                <LogOut size={19} />
-              </button>
-            </form>
-          </div>
-        </header>
+        <AdminNavigation
+          active="dashboard"
+          notificationCount={pendingOrders}
+          searchPlaceholder="Search orders, products..."
+          session={session}
+        />
 
         <div className="admin-content">
           <div className="admin-page-title">
@@ -181,14 +106,14 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
               <h2>Dashboard</h2>
             </div>
             <div className="admin-title-actions">
-              <Link href="/chef/products" className="admin-secondary-button">
+              <Button href="/admin/products" variant="secondary">
                 <Store size={18} />
                 Manage Products
-              </Link>
-              <Link href="/chef/dashboard" className="admin-primary-button">
+              </Button>
+              <Button href="/chef/dashboard">
                 <ClipboardList size={18} />
                 Chef Orders View
-              </Link>
+              </Button>
             </div>
           </div>
 
@@ -231,7 +156,9 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
           <section id="orders" className="admin-table-panel">
             <div className="admin-panel-heading">
               <h3>Recent Orders</h3>
-              <Link href="/chef/dashboard">View All</Link>
+              <Button href="/chef/dashboard" variant="text">
+                View All
+              </Button>
             </div>
 
             <div className="admin-table-scroll">
@@ -268,18 +195,18 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
                               <form action={updateOrderStatusAction}>
                                 <input type="hidden" name="order_id" value={order.id} />
                                 <input type="hidden" name="status" value="confirmed" />
-                                <button type="submit" className="admin-mini-button">
+                                <Button type="submit" variant="mini">
                                   <BadgeCheck size={15} />
                                   Confirm
-                                </button>
+                                </Button>
                               </form>
                               <form action={updateOrderStatusAction}>
                                 <input type="hidden" name="order_id" value={order.id} />
                                 <input type="hidden" name="status" value="rejected" />
-                                <button type="submit" className="admin-mini-button danger">
+                                <Button type="submit" variant="dangerMini">
                                   <X size={15} />
                                   Reject
-                                </button>
+                                </Button>
                               </form>
                             </div>
                           ) : (
@@ -287,9 +214,9 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
                           )}
                         </td>
                         <td>
-                          <Link href={`/chef/orders/${order.id}`} className="admin-more-link" aria-label="Open order">
+                          <Button href={`/chef/orders/${order.id}`} variant="moreIcon" aria-label="Open order">
                             <MoreVertical size={20} />
-                          </Link>
+                          </Button>
                         </td>
                       </tr>
                     ))
@@ -303,12 +230,12 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
                 Showing {recentOrders.length} of {orders.length} orders
               </p>
               <div>
-                <button type="button" aria-label="Previous page">
+                <Button type="button" variant="tableIcon" aria-label="Previous page">
                   <ChevronLeft size={18} />
-                </button>
-                <button type="button" aria-label="Next page">
+                </Button>
+                <Button type="button" variant="tableIcon" aria-label="Next page">
                   <ChevronRight size={18} />
-                </button>
+                </Button>
               </div>
             </div>
           </section>
@@ -325,7 +252,9 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
                       <small>Only 200g remaining</small>
                     </span>
                   </div>
-                  <button type="button">Reorder</button>
+                  <Button type="button" variant="alert">
+                    Reorder
+                  </Button>
                 </div>
                 <div className="admin-alert-row warning">
                   <div>
@@ -335,7 +264,9 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
                       <small>2 bags left</small>
                     </span>
                   </div>
-                  <button type="button">Update</button>
+                  <Button type="button" variant="alert">
+                    Update
+                  </Button>
                 </div>
               </div>
             </article>
@@ -344,10 +275,10 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
               <div>
                 <h3>Bake Today?</h3>
                 <p>Generate the morning production schedule based on current pre-orders.</p>
-                <button type="button">
+                <Button type="button">
                   <Printer size={18} />
                   Print Schedule
-                </button>
+                </Button>
               </div>
               <Cookie size={180} />
             </article>
@@ -378,9 +309,9 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
                 Temporary password
                 <input name="password" type="password" placeholder="Set a temporary password" required />
               </label>
-              <button type="submit" className="admin-primary-button">
+              <Button type="submit">
                 Create Chef
-              </button>
+              </Button>
             </form>
 
             <article className="admin-panel">

@@ -41,7 +41,7 @@ export function SiteHeader({ session }: SiteHeaderProps) {
               <ChefHat size={18} />
               Orders
             </Link>
-            <Link href="/chef/products" className="nav-icon-link">
+            <Link href={isAdmin ? "/admin/products" : "/chef/products"} className="nav-icon-link">
               <Store size={18} />
               Products
             </Link>

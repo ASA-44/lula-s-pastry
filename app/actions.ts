@@ -344,16 +344,17 @@ export async function createDishAction(formData: FormData) {
 
   revalidatePath("/products");
   revalidatePath("/chef/products");
+  revalidatePath("/admin/products");
   revalidatePath("/admin/dashboard");
-  redirect("/chef/products");
+  redirect(session.role === "admin" ? "/admin/products" : "/chef/products");
 }
 
 export async function deleteDishAction(formData: FormData) {
-  await requireRoles(["admin", "chef"]);
+  const session = await requireRoles(["admin", "chef"]);
   const dishId = Number(formText(formData, "dish_id"));
 
   if (!dishId) {
-    redirect("/chef/products");
+    redirect(session.role === "admin" ? "/admin/products" : "/chef/products");
   }
 
   const [rows] = await pool.query<(RowDataPacket & { image_url: string | null })[]>(
@@ -374,8 +375,9 @@ export async function deleteDishAction(formData: FormData) {
 
   revalidatePath("/products");
   revalidatePath("/chef/products");
+  revalidatePath("/admin/products");
   revalidatePath("/admin/dashboard");
-  redirect("/chef/products");
+  redirect(session.role === "admin" ? "/admin/products" : "/chef/products");
 }
 
 export async function createChefAction(formData: FormData) {

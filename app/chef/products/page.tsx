@@ -16,6 +16,10 @@ export default async function ChefProductsPage() {
     redirect("/login");
   }
 
+  if (session.role === "admin") {
+    redirect("/admin/products");
+  }
+
   const dishes = await getAllDishes();
 
   return (
