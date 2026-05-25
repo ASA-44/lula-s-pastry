@@ -2068,6 +2068,13 @@ th {
   border-bottom: 0;
 }
 
+.admin-dashboard-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
 .admin-products-content {
   gap: 32px;
 }
@@ -2486,6 +2493,10 @@ th {
   .admin-product-actions {
     justify-content: flex-end;
     width: 100%;
+  }
+
+  .admin-dashboard-links {
+    grid-template-columns: 1fr;
   }
 
   .admin-orders-table th,
