@@ -66,7 +66,10 @@ export default async function SignInPage({ searchParams }: PageProps) {
             />
           </div>
           <PasswordChecklist />
-          <button className="primary-button" type="submit">
+          <button
+            className="primary-button !mt-4 !min-h-[72px] !rounded-[14px] !text-2xl"
+            type="submit"
+          >
             Create Account
           </button>
           <p className="auth-switch">
