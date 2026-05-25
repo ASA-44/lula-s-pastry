@@ -8,7 +8,7 @@ type PasswordChecklistProps = {
   placeholder?: string;
 };
 
-const specialCharacterPattern = /[!@#$%^&*(),.?":{}|<>]/;
+const specialCharacterPattern = /[!@#$%^&*]/;
 
 function validatePassword(pwd: string) {
   const hasCapital = /[A-Z]/.test(pwd);
@@ -55,7 +55,7 @@ export function PasswordChecklist({
         name="password"
         value={password}
         minLength={enforcesRules ? 8 : undefined}
-        pattern={enforcesRules ? '(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}' : undefined}
+        pattern={enforcesRules ? "(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}" : undefined}
         title="At least 8 characters, one capital letter, and one special character"
         onChange={handlePasswordChange}
         className={`w-full px-4 py-2 bg-input-background border rounded-lg focus:outline-none focus:ring-2 ${
