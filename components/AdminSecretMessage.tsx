@@ -33,7 +33,7 @@ export function AdminSecretMessage({
     const timer = window.setTimeout(() => {
       setVisible(false);
       router.replace("/admin/dashboard", { scroll: false });
-    }, 2000);
+    }, 5000);
 
     return () => window.clearTimeout(timer);
   }, [router, show]);
