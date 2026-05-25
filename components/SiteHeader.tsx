@@ -37,7 +37,7 @@ export function SiteHeader({ session }: SiteHeaderProps) {
         )}
         {(isChef || isAdmin) && (
           <>
-            <Link href="/chef/dashboard" className="nav-icon-link">
+            <Link href={isAdmin ? "/admin/orders" : "/chef/dashboard"} className="nav-icon-link">
               <ChefHat size={18} />
               Orders
             </Link>

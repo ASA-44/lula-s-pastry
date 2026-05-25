@@ -17,7 +17,7 @@ import { logoutAction } from "@/app/actions";
 import { Button } from "@/components/Button";
 import type { SessionUser } from "@/lib/session";
 
-type AdminNavItem = "dashboard" | "orders" | "products" | "chefs" | "settings";
+export type AdminNavItem = "dashboard" | "orders" | "products" | "chefs" | "settings";
 
 type AdminNavigationProps = {
   active: AdminNavItem;
@@ -46,7 +46,7 @@ export function AdminSidebar({ active, session }: Pick<AdminNavigationProps, "ac
           <Gauge size={20} />
           Dashboard
         </Link>
-        <Link href="/admin/dashboard#orders" className={activeClass(active, "orders")}>
+        <Link href="/admin/orders" className={activeClass(active, "orders")}>
           <ShoppingBag size={20} />
           Orders
         </Link>
@@ -54,11 +54,11 @@ export function AdminSidebar({ active, session }: Pick<AdminNavigationProps, "ac
           <Cookie size={20} />
           Products
         </Link>
-        <Link href="/admin/dashboard#chefs" className={activeClass(active, "chefs")}>
+        <Link href="/admin/chefs" className={activeClass(active, "chefs")}>
           <Users size={20} />
           Chefs
         </Link>
-        <Link href="/admin/dashboard#settings" className={activeClass(active, "settings")}>
+        <Link href="/admin/settings" className={activeClass(active, "settings")}>
           <Settings size={20} />
           Settings
         </Link>
