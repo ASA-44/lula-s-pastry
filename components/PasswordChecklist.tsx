@@ -63,6 +63,7 @@ export function PasswordChecklist({
         placeholder={placeholder}
         aria-invalid={Boolean(passwordError)}
         aria-describedby={`${passwordError ? "password-error " : ""}password-requirements`}
+        suppressHydrationWarning
         required
       />
       {passwordError && (

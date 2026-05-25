@@ -49,7 +49,7 @@ export default async function SignInPage({ searchParams }: PageProps) {
         </div>
 
         <form action={registerCustomerAction} className="auth-card form-stack">
-          <h2>Sign In</h2>
+          <h2>Sign Up</h2>
           {error && <div className="error">{error}</div>}
           <div className="form-row">
             <label htmlFor="first_name">First name</label>

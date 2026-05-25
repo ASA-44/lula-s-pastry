@@ -63,7 +63,7 @@ export function SiteHeader({ session }: SiteHeaderProps) {
               Login
             </Link>
             <Link href="/signin" className="primary-button small">
-              Sign In
+              Sign Up
             </Link>
           </>
         )}

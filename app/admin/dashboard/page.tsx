@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { Check, X } from "lucide-react";
 
 import { createChefAction, updateOrderStatusAction } from "@/app/actions";
+import { AdminSecretMessage } from "@/components/AdminSecretMessage";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getChefs, getOrders } from "@/lib/data";
 import { money, niceDate, statusClass } from "@/lib/format";
@@ -28,10 +29,12 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
   const params = (await searchParams) ?? {};
   const error = pick(params.error);
   const chefCreated = pick(params.chefCreated);
+  const showSecret = pick(params.secret) === "1";
 
   return (
     <main className="page-shell">
       <SiteHeader session={session} />
+      <AdminSecretMessage show={showSecret} />
 
       <section className="dashboard">
         <div className="dashboard-top">
