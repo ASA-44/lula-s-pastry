@@ -12,7 +12,7 @@ type AdminSecretMessageProps = {
 
 export function AdminSecretMessage({
   show,
-  message = "We accept payments through Snapchat 😜"
+  message = "We accept payments by secret things between us 😜"
 }: AdminSecretMessageProps) {
   const router = useRouter();
   const [visible, setVisible] = useState(false);
