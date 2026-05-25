@@ -32,17 +32,12 @@ export function PasswordChecklist({
   placeholder = "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
 }: PasswordChecklistProps) {
   const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
   const enforcesRules = mode === "signin";
   const hasMinLength = password.length >= 8;
   const hasCapital = /[A-Z]/.test(password);
   const hasSpecial = specialCharacterPattern.test(password);
-
-  function handlePasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const pwd = e.target.value;
-    setPassword(pwd);
-    setPasswordError(validatePassword(pwd));
-  }
+  const isPasswordValid = hasMinLength && hasCapital && hasSpecial;
+  const passwordError = password ? validatePassword(password) : "";
 
   return (
     <div className="space-y-2">
@@ -57,11 +52,11 @@ export function PasswordChecklist({
         minLength={enforcesRules ? 8 : undefined}
         pattern={enforcesRules ? "(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}" : undefined}
         title="At least 8 characters, one capital letter, and one special character"
-        onChange={handlePasswordChange}
+        onChange={(e) => setPassword(e.target.value)}
         className={`w-full px-4 py-2 bg-input-background border rounded-lg focus:outline-none focus:ring-2 ${
           passwordError
             ? "border-red-500 focus:ring-red-500"
-            : password
+            : isPasswordValid
               ? "border-green-500 focus:ring-primary"
               : "border-border focus:ring-primary"
         }`}
