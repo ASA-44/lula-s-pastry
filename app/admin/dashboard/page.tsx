@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { AdminSecretMessage } from "@/components/AdminSecretMessage";
+import { AdminSecretMessage } from "@/components/admin/AdminSecretMessage";
 import { AdminDashboardOverview } from "@/components/admin/AdminDashboardOverview";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { getOrders, getTopSellingDish } from "@/lib/data";

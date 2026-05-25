@@ -1,4 +1,15 @@
-import { BadgeCheck, ClipboardList, Cookie, CreditCard, Settings, Star, Store, TrendingUp, Users } from "lucide-react";
+import {
+  BadgeCheck,
+  ClipboardList,
+  Cookie,
+  CreditCard,
+  Settings,
+  Star,
+  Store,
+  TrendingUp,
+  Users,
+  UsersRound
+} from "lucide-react";
 
 import { Button } from "@/components/Button";
 import { money } from "@/lib/format";
@@ -104,6 +115,10 @@ export function AdminDashboardOverview({ orders, topSellingDish }: AdminDashboar
             <Button href="/admin/chefs" variant="secondary">
               <Users size={18} />
               Chefs
+            </Button>
+            <Button href="/admin/customers" variant="secondary">
+              <UsersRound size={18} />
+              Customers
             </Button>
             <Button href="/admin/settings" variant="secondary">
               <Settings size={18} />

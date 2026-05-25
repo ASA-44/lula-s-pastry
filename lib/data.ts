@@ -125,6 +125,17 @@ export async function getChefs() {
   return rows;
 }
 
+export async function getCustomers() {
+  const [rows] = await pool.query<Row<User>[]>(
+    `SELECT id, username, email, password, user_type, full_name, phone, address, created_at
+     FROM users
+     WHERE user_type = 'customer'
+     ORDER BY created_at DESC, id DESC`
+  );
+
+  return rows;
+}
+
 export async function userExists(username: string, email: string) {
   const [rows] = await pool.query<Row<{ id: number }>[]>(
     "SELECT id FROM users WHERE username = :username OR email = :email LIMIT 1",
