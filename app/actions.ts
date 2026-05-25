@@ -9,6 +9,7 @@ import type { ResultSetHeader, RowDataPacket } from "mysql2";
 
 import { pool } from "@/lib/db";
 import { emailExists, findUserForLogin, getCartItems, userExists, usernameExists } from "@/lib/data";
+import { passwordMeetsRules } from "@/lib/password-rules";
 import { hashPassword, verifyPassword } from "@/lib/passwords";
 import { clearSession, getSession, setSession } from "@/lib/session";
 import type { OrderStatus, UserRole } from "@/types/database";
@@ -26,10 +27,6 @@ function redirectForRole(role: UserRole) {
   if (role === "admin") return "/admin/dashboard";
   if (role === "chef") return "/chef/dashboard";
   return "/products";
-}
-
-function passwordMeetsRules(password: string) {
-  return password.length >= 8 && /[A-Z]/.test(password) && /[^A-Za-z0-9]/.test(password);
 }
 
 function makeUsernameSeed(firstName: string, email: string) {

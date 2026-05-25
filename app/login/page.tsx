@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 
 import { loginAction } from "@/app/actions";
+import { PasswordChecklist } from "@/components/PasswordChecklist";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getSession } from "@/lib/session";
 
@@ -61,17 +62,11 @@ export default async function LoginPage({ searchParams }: PageProps) {
               required
             />
           </div>
-          <div className="form-row">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Enter your password"
-              required
-            />
-          </div>
-          <button className="primary-button" type="submit">
+          <PasswordChecklist mode="login" />
+          <button
+            className="primary-button !mt-4 !min-h-[72px] !rounded-[14px] !text-2xl"
+            type="submit"
+          >
             Login
           </button>
           <p className="auth-switch">

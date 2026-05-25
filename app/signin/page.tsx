@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 
 import { registerCustomerAction } from "@/app/actions";
+import { PasswordChecklist } from "@/components/PasswordChecklist";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getSession } from "@/lib/session";
 
@@ -64,20 +65,11 @@ export default async function SignInPage({ searchParams }: PageProps) {
               required
             />
           </div>
-          <div className="form-row">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              minLength={8}
-              pattern="(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}"
-              title="At least 8 characters, one capital letter, and one special character"
-              placeholder="Create a strong password"
-              required
-            />
-          </div>
-          <button className="primary-button" type="submit">
+          <PasswordChecklist />
+          <button
+            className="primary-button !mt-4 !min-h-[72px] !rounded-[14px] !text-2xl"
+            type="submit"
+          >
             Create Account
           </button>
           <p className="auth-switch">
