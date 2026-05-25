@@ -3,29 +3,30 @@ import { redirect } from "next/navigation";
 import { AdminSecretMessage } from "@/components/admin/AdminSecretMessage";
 import { AdminDashboardOverview } from "@/components/admin/AdminDashboardOverview";
 import { AdminShell } from "@/components/admin/AdminShell";
+
 import { getOrders, getTopSellingDish } from "@/lib/data";
 import { getSession } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
-type PageProps = {
-  searchParams?: Promise<Record<string, string | string[] | undefined>>;
-};
-
-function pick(value: string | string[] | undefined) {
-  return Array.isArray(value) ? value[0] : value;
-}
-
-export default async function AdminDashboardPage({ searchParams }: PageProps) {
+export default async function AdminDashboardPage() {
   const session = await getSession();
+
   if (!session || session.role !== "admin") {
     redirect("/login");
   }
 
-  const [orders, topSellingDish] = await Promise.all([getOrders(), getTopSellingDish()]);
-  const params = (await searchParams) ?? {};
-  const showSecret = pick(params.secret) === "1";
-  const pendingOrders = orders.filter((order) => order.status === "pending").length;
+  const [orders, topSellingDish] = await Promise.all([
+    getOrders(),
+    getTopSellingDish(),
+  ]);
+
+  const showSecret =
+    session.email?.toLowerCase() === "lula@lulaspastry.com";
+
+  const pendingOrders = orders.filter(
+    (order) => order.status === "pending"
+  ).length;
 
   return (
     <AdminShell
@@ -35,6 +36,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
       session={session}
     >
       <AdminSecretMessage show={showSecret} />
+
       <AdminDashboardOverview orders={orders} topSellingDish={topSellingDish} />
     </AdminShell>
   );
