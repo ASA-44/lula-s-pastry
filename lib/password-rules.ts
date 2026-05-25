@@ -18,7 +18,7 @@ const passwordRules = [
   {
     id: "special",
     label: "At least one special character",
-    test: (password: string) => /[^A-Za-z0-9]/.test(password)
+    test: (password: string) => /[!@#$%^&*(),.?":{}|<>]/.test(password)
   }
 ] as const;
 
