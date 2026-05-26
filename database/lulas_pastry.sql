@@ -200,7 +200,7 @@ INSERT INTO `users` (`id`, `username`, `email`, `password`, `user_type`, `full_n
 (6, 'Hiba', 'hibahussieni@gmail.com', '$2y$10$4QY98.2l5ZMbcC6bsd0lyegNO4hCfs7S5AIt0eTPGP8Fl9i3TLH6C', 'customer', 'Hiba', NULL, NULL, '2025-12-31 09:55:59'),
 (7, 'Haidar', 'Haidar@gmail.com', '$2y$10$FhmGwkmNejq2WBeKWGlCG.aWA70ArPVyHXMswRh2K/qyPgifU6a46', 'customer', 'Haidar', NULL, NULL, '2025-12-31 10:00:20'),
 (9, 'Banine', 'Banine@gmail.com', '$2y$10$k9RjPmP8.xu44QKzPXmFYuzvM53dYI1tN0VoMvmSK.UZLZ5fYlyi2', 'customer', 'Banine', NULL, NULL, '2025-12-31 12:07:59'),
-(10, 'lula_admin', 'lula@lulaspastry.com', '$2b$10$P3sZgKRIMCiGj933r8igzO6YOKtYFfSgs9nz74M0OSyeeP8duyHOC', 'admin', 'Lula Admin', NULL, NULL, '2026-05-23 00:00:00');
+(10, 'lula_admin', 'lula@lulaspastry.com', '$2b$10$aPTdl7gN8N3IulwXbl5d2eT3ZbdUwoAUlLNzrt.qAepXJHc4ht0dq', 'admin', 'Lula Admin', NULL, NULL, '2026-05-23 00:00:00');
 
 --
 -- Indexes for dumped tables

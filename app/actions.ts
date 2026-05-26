@@ -29,6 +29,10 @@ function redirectForRole(role: UserRole) {
   return "/products";
 }
 
+function adminOrChefPath(role: UserRole, adminPath: string, chefPath: string) {
+  return role === "admin" ? adminPath : chefPath;
+}
+
 function makeUsernameSeed(firstName: string, email: string) {
   const seed = firstName || email.split("@")[0] || "customer";
   return seed.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "") || "customer";
@@ -273,6 +277,7 @@ export async function checkoutAction(formData: FormData) {
   revalidatePath("/cart");
   revalidatePath("/chef/dashboard");
   revalidatePath("/admin/dashboard");
+  revalidatePath("/admin/orders");
   redirect(`/order-success?orderId=${orderId}`);
 }
 
@@ -291,7 +296,8 @@ export async function updateOrderStatusAction(formData: FormData) {
 
   revalidatePath("/chef/dashboard");
   revalidatePath("/admin/dashboard");
-  redirect(redirectForRole(session.role));
+  revalidatePath("/admin/orders");
+  redirect(adminOrChefPath(session.role, "/admin/orders", "/chef/dashboard"));
 }
 
 export async function createDishAction(formData: FormData) {
@@ -348,16 +354,17 @@ export async function createDishAction(formData: FormData) {
 
   revalidatePath("/products");
   revalidatePath("/chef/products");
+  revalidatePath("/admin/products");
   revalidatePath("/admin/dashboard");
-  redirect("/chef/products");
+  redirect(adminOrChefPath(session.role, "/admin/products", "/chef/products"));
 }
 
 export async function deleteDishAction(formData: FormData) {
-  await requireRoles(["admin", "chef"]);
+  const session = await requireRoles(["admin", "chef"]);
   const dishId = Number(formText(formData, "dish_id"));
 
   if (!dishId) {
-    redirect("/chef/products");
+    redirect(adminOrChefPath(session.role, "/admin/products", "/chef/products"));
   }
 
   const [rows] = await pool.query<(RowDataPacket & { image_url: string | null })[]>(
@@ -378,8 +385,9 @@ export async function deleteDishAction(formData: FormData) {
 
   revalidatePath("/products");
   revalidatePath("/chef/products");
+  revalidatePath("/admin/products");
   revalidatePath("/admin/dashboard");
-  redirect("/chef/products");
+  redirect(adminOrChefPath(session.role, "/admin/products", "/chef/products"));
 }
 
 export async function createChefAction(formData: FormData) {
@@ -391,11 +399,11 @@ export async function createChefAction(formData: FormData) {
   const phone = formText(formData, "phone");
 
   if (!fullName || !username || !email || !password) {
-    fail("/admin/dashboard", "Chef name, username, email, and password are required.");
+    fail("/admin/chefs", "Chef name, username, email, and password are required.");
   }
 
   if (await userExists(username, email)) {
-    fail("/admin/dashboard", "A user with this username or email already exists.");
+    fail("/admin/chefs", "A user with this username or email already exists.");
   }
 
   const hashedPassword = await hashPassword(password);
@@ -413,5 +421,6 @@ export async function createChefAction(formData: FormData) {
   );
 
   revalidatePath("/admin/dashboard");
-  redirect("/admin/dashboard?chefCreated=1");
+  revalidatePath("/admin/chefs");
+  redirect("/admin/chefs?chefCreated=1");
 }

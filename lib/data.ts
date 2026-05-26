@@ -125,6 +125,17 @@ export async function getChefs() {
   return rows;
 }
 
+export async function getCustomers() {
+  const [rows] = await pool.query<Row<User>[]>(
+    `SELECT id, username, email, password, user_type, full_name, phone, address, created_at
+     FROM users
+     WHERE user_type = 'customer'
+     ORDER BY created_at DESC, id DESC`
+  );
+
+  return rows;
+}
+
 export async function userExists(username: string, email: string) {
   const [rows] = await pool.query<Row<{ id: number }>[]>(
     "SELECT id FROM users WHERE username = :username OR email = :email LIMIT 1",
@@ -201,6 +212,28 @@ export async function getOrders() {
   );
 
   return rows.map(normalizeOrder);
+}
+
+export async function getTopSellingDish() {
+  const [rows] = await pool.query<Row<{ name: string; units_sold: number | string }>[]>(
+    `SELECT d.name, SUM(oi.quantity) AS units_sold
+     FROM order_items oi
+     JOIN dishes d ON oi.dish_id = d.id
+     GROUP BY d.id, d.name
+     ORDER BY units_sold DESC, d.name ASC
+     LIMIT 1`
+  );
+
+  const topDish = rows[0];
+
+  if (!topDish) {
+    return null;
+  }
+
+  return {
+    name: topDish.name,
+    unitsSold: Number(topDish.units_sold)
+  };
 }
 
 export async function getOrderDetails(orderId: number) {
