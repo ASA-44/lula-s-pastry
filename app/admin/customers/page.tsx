@@ -23,7 +23,7 @@ export default async function AdminCustomersPage() {
       searchPlaceholder="Search customers..."
       session={session}
     >
-      <AdminCustomersSection customers={customers} />
+      <AdminCustomersSection customers={customers} orders={orders} />
     </AdminShell>
   );
 }

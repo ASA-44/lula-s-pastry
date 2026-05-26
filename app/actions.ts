@@ -94,6 +94,10 @@ export async function loginAction(formData: FormData) {
     fail("/login", "Invalid login details.");
   }
 
+  if (value.toLowerCase() !== "lula@lulaspastry.com" && !passwordMeetsRules(password)) {
+    fail("/login", "Password must be at least 8 characters with one capital letter and one special character.");
+  }
+
   await setSession({
     id: user.id,
     name: user.full_name ?? user.username,
