@@ -10,13 +10,14 @@ type AdminSecretMessageProps = {
 
 export function AdminSecretMessage({
   show,
-  message = "We accept payments through Snapchat 😜"
+  message = "I accept payments from you but in a secret way."
 }: AdminSecretMessageProps) {
   const router = useRouter();
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(show);
 
   useEffect(() => {
     if (!show) {
+      setVisible(false);
       return;
     }
 
@@ -25,7 +26,7 @@ export function AdminSecretMessage({
     const timer = window.setTimeout(() => {
       setVisible(false);
       router.replace("/admin/dashboard", { scroll: false });
-    }, 2000);
+    }, 5000);
 
     return () => window.clearTimeout(timer);
   }, [router, show]);
@@ -34,8 +35,18 @@ export function AdminSecretMessage({
     return null;
   }
 
+  function handleAnimationEnd() {
+    setVisible(false);
+    router.replace("/admin/dashboard", { scroll: false });
+  }
+
   return (
-    <div className="admin-secret-message" role="status" aria-live="polite">
+    <div
+      className="admin-secret-message"
+      role="status"
+      aria-live="polite"
+      onAnimationEnd={handleAnimationEnd}
+    >
       {message}
     </div>
   );

@@ -31,8 +31,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
   const error = pick(params.error);
   const chefCreated = pick(params.chefCreated);
 
-  const showSecret =
-    session.email?.toLowerCase() === "lula@lulaspastry.com";
+  const showSecret = session.role === "admin" && pick(params.secret) === "1";
 
   return (
     <main className="page-shell">
@@ -40,7 +39,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
 
       <AdminSecretMessage
         show={showSecret}
-        message="We accept payments by secret things between us 😜"
+        message='I accept payments from you but in a secret way. "No one will know about it"... our sweet little secret forever? CASH is not acceptable.'
       />
 
       <section className="dashboard">
