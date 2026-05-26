@@ -1,14 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AlertCircle, CheckCircle } from "lucide-react";
 
 type PasswordChecklistProps = {
   mode?: "signin" | "login";
   placeholder?: string;
+  identifier?: string;
+  exemptIdentifier?: string;
+  password?: string;
+  onPasswordChange?: (password: string) => void;
 };
 
 const specialCharacterPattern = /[!@#$%^&*]/;
+
+export function isPasswordRuleExempt(identifier: string, exemptIdentifier?: string) {
+  return Boolean(exemptIdentifier) && identifier.trim().toLowerCase() === exemptIdentifier?.toLowerCase();
+}
+
+export function passwordMeetsChecklistRules(password: string) {
+  return password.length >= 8 && /[A-Z]/.test(password) && specialCharacterPattern.test(password);
+}
 
 function validatePassword(pwd: string) {
   const hasCapital = /[A-Z]/.test(pwd);
@@ -29,15 +41,47 @@ function validatePassword(pwd: string) {
 
 export function PasswordChecklist({
   mode = "signin",
-  placeholder = "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
+  placeholder = "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+  identifier = "",
+  exemptIdentifier,
+  password: controlledPassword,
+  onPasswordChange
 }: PasswordChecklistProps) {
-  const [password, setPassword] = useState("");
-  const enforcesRules = mode === "signin";
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [uncontrolledPassword, setUncontrolledPassword] = useState("");
+  const password = controlledPassword ?? uncontrolledPassword;
+  const setPassword = onPasswordChange ?? setUncontrolledPassword;
+  const isExemptIdentifier =
+    mode === "login" && isPasswordRuleExempt(identifier, exemptIdentifier);
+  const enforcesRules = mode === "signin" || (mode === "login" && !isExemptIdentifier);
+  const usesNativeRules = mode === "signin";
   const hasMinLength = password.length >= 8;
   const hasCapital = /[A-Z]/.test(password);
   const hasSpecial = specialCharacterPattern.test(password);
-  const isPasswordValid = hasMinLength && hasCapital && hasSpecial;
-  const passwordError = password ? validatePassword(password) : "";
+  const isPasswordValid = passwordMeetsChecklistRules(password);
+  const passwordError = enforcesRules && password ? validatePassword(password) : "";
+
+  function syncPassword(value: string) {
+    setPassword(value);
+  }
+
+  useEffect(() => {
+    const input = inputRef.current;
+
+    if (!input) {
+      return;
+    }
+
+    syncPassword(input.value);
+
+    const interval = window.setInterval(() => {
+      syncPassword(input.value);
+    }, 500);
+
+    return () => {
+      window.clearInterval(interval);
+    };
+  }, [setPassword]);
 
   return (
     <div className="space-y-2">
@@ -45,14 +89,19 @@ export function PasswordChecklist({
         Password
       </label>
       <input
+        ref={inputRef}
         id="password"
         type="password"
         name="password"
-        value={password}
-        minLength={enforcesRules ? 8 : undefined}
-        pattern={enforcesRules ? "(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}" : undefined}
+        minLength={usesNativeRules ? 8 : undefined}
+        pattern={usesNativeRules ? "(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}" : undefined}
         title="At least 8 characters, one capital letter, and one special character"
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e) => syncPassword(e.target.value)}
+        onInput={(e) => syncPassword(e.currentTarget.value)}
+        onKeyUp={(e) => syncPassword(e.currentTarget.value)}
+        onBlur={(e) => syncPassword(e.currentTarget.value)}
+        onFocus={(e) => syncPassword(e.currentTarget.value)}
+        onAnimationStart={(e) => syncPassword(e.currentTarget.value)}
         className={`w-full px-4 py-2 bg-input-background border rounded-lg focus:outline-none focus:ring-2 ${
           passwordError
             ? "border-red-500 focus:ring-red-500"
@@ -61,17 +110,18 @@ export function PasswordChecklist({
               : "border-border focus:ring-primary"
         }`}
         placeholder={placeholder}
-        aria-invalid={Boolean(passwordError)}
+        aria-invalid={enforcesRules && Boolean(passwordError)}
         aria-describedby={`${passwordError ? "password-error " : ""}password-requirements`}
         suppressHydrationWarning
         required
       />
-      {passwordError && (
+      {enforcesRules && passwordError && (
         <div id="password-error" className="flex items-start gap-2 text-red-600 text-sm">
           <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
           <span>{passwordError}</span>
         </div>
       )}
+      {enforcesRules && (
       <div className="space-y-2 pt-2">
         <p className="text-sm text-muted-foreground">Password must contain:</p>
         <div id="password-requirements" className="space-y-1" aria-live="polite">
@@ -107,6 +157,7 @@ export function PasswordChecklist({
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }

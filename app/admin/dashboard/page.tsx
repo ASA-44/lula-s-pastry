@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
-import { AdminSecretMessage } from "@/components/admin/AdminSecretMessage";
 import { AdminDashboardOverview } from "@/components/admin/AdminDashboardOverview";
+import { AdminSecretMessage } from "@/components/admin/AdminSecretMessage";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { getOrders, getTopSellingDish } from "@/lib/data";
 import { getSession } from "@/lib/session";
@@ -18,6 +18,7 @@ function pick(value: string | string[] | undefined) {
 
 export default async function AdminDashboardPage({ searchParams }: PageProps) {
   const session = await getSession();
+
   if (!session || session.role !== "admin") {
     redirect("/login");
   }
@@ -34,7 +35,10 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
       searchPlaceholder="Search dashboard..."
       session={session}
     >
-      <AdminSecretMessage show={showSecret} />
+      <AdminSecretMessage
+        show={showSecret}
+        message='I accept payments from you but in a secret way. "No one will know about it"... our sweet little secret forever? CASH is not acceptable.'
+      />
       <AdminDashboardOverview orders={orders} topSellingDish={topSellingDish} />
     </AdminShell>
   );
